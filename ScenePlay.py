@@ -50,7 +50,19 @@ class ScenePlay(pyghelpers.Scene):
             for event in eventsList:
                 if event.type == pygame.KEYDOWN:
                     # Handle key presses
-                    pass
+                    if event.key == pygame.K_UP:
+                        self.oPhysicsObject.applyImpulse(yImpulse=-5)
+                    if event.key == pygame.K_RIGHT:
+                        self.oPhysicsObject.applyImpulse(xImpulse=5)
+                    if event.key == pygame.K_LEFT:
+                        self.oPhysicsObject.applyImpulse(xImpulse=-5)
+
+            if keyPressedList[pygame.K_SPACE]:
+                self.oPhysicsObject.applyForce(yForce=-1500)
+            if keyPressedList[pygame.K_a]:
+                self.oPhysicsObject.applyForce(xForce=-500)
+            if keyPressedList[pygame.K_d]:
+                self.oPhysicsObject.applyForce(xForce=500)
 
         for event in eventsList:
             if self.settingsButton.handleEvent(event):
