@@ -3,6 +3,7 @@ import pygame
 import pyghelpers
 import pygwidgets
 from Constants import *
+from PhysicsObject import *
 
 BOTTOM_RECT = (0, GAME_HEIGHT + 1, WINDOW_WIDTH,
                                 WINDOW_HEIGHT - GAME_HEIGHT)
@@ -23,12 +24,14 @@ class ScenePlay(pyghelpers.Scene):
                                                 'quit',
                                                 width=DEFAULT_BUTTON_WIDTH)
 
-        self.highScoresButton = pygwidgets.TextButton(self.window,
-                                                      (190, GAME_HEIGHT + 90),
+        self.settingsButton = pygwidgets.TextButton(self.window,
+                                                    (190, GAME_HEIGHT + 90),
                                                       'settings',
-                                                      width=DEFAULT_BUTTON_WIDTH)
+                                                    width=DEFAULT_BUTTON_WIDTH)
 
-        self.playingState = STATE_WAITING
+        self.oPhysicsObject = PhysicsObject(self.window)
+
+        self.playingState = STATE_PLAYING
 
     def getSceneKey(self):
         return SCENE_PLAY
@@ -43,11 +46,11 @@ class ScenePlay(pyghelpers.Scene):
         if self.playingState == STATE_PLAYING:
             for event in eventsList:
                 if event.type == pygame.KEYDOWN:
-                    pass
                     # Handle key presses
+                    pass
 
         for event in eventsList:
-            if self.highScoresButton.handleEvent(event):
+            if self.settingsButton.handleEvent(event):
                 self.goToScene(SCENE_SETTINGS)
 
             if self.quitButton.handleEvent(event):
@@ -57,13 +60,18 @@ class ScenePlay(pyghelpers.Scene):
         if self.playingState != STATE_PLAYING:
             return  # only update when playing
 
+        self.oPhysicsObject.update()
+
     def draw(self):
         self.window.fill(BLACK)
+
+        #draw objects on top of background
+        self.oPhysicsObject.draw()
 
         # Draw all the info at the bottom of the window
         self.controlsBackground.draw()
         self.quitButton.draw()
-        self.highScoresButton.draw()
+        self.settingsButton.draw()
 
     def leave(self):
         pass
