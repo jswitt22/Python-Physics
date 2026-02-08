@@ -15,6 +15,10 @@ class PhysicsObject:
         self.xPrev = self.x
         self.yPrev = self.y
 
+        self.mass = 1.0 #placeholder for now
+        self.xImpulse, self.yImpulse = 0, 0
+        self.xForce, self.yForce = 0, 0
+
         self.oDebugText = pygwidgets.DisplayText(self.window,
                                                  (0, 0),
                                                  textColor=WHITE,)
@@ -53,19 +57,32 @@ class PhysicsObject:
         strList = [positionString, accelerationString]
         self.oDebugText.setText(strList)
 
-    def update(self, dt, xImpulse=0, yImpulse=0):
+    def applyImpulse(self, xImpulse=0, yImpulse=0):
+        if xImpulse == 0 and yImpulse == 0:
+            return
+        self.xImpulse, self.yImpulse = xImpulse, yImpulse
+
+    def applyForce(self, xForce=0, yForce=0):
+        if xForce == 0 and yForce == 0:
+            return
+        self.xForce += xForce
+        self.yForce += yForce
+
+    def update(self, dt):
         # Verlet method
         # Apply forces
-        self.ax = 0 # sum forces and calculate ax
-        self.ay = GRAVITY + 0 # sum forces and calculate ay
+        self.ax = self.xForce/self.mass
+        self.ay = GRAVITY + self.yForce/self.mass
         # Apply impulses if any
-        self.xPrev = self.xPrev - xImpulse * dt
-        self.yPrev = self.yPrev - yImpulse * dt
+        self.xPrev -= self.xImpulse
+        self.yPrev -= self.yImpulse
         # Verlet integration
         xPrev, yPrev = self.x, self.y
         self.x = 2*self.x - self.xPrev + self.ax * dt * dt
         self.y = 2*self.y - self.yPrev + self.ay * dt * dt
         self.xPrev, self.yPrev = xPrev, yPrev
+        self.xImpulse, self.yImpulse = 0, 0
+        self.xForce, self.yForce = 0, 0
 
         # Check wall collision
         self.collideWithBounds()
