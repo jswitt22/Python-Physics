@@ -14,7 +14,7 @@ from SceneSettings import *
 from Constants import *
 
 # 2 - Define constants
-FRAMES_PER_SECOND = 30
+FRAMES_PER_SECOND = 120
 
 # 3 - Initialize the world
 pygame.init()

@@ -11,7 +11,7 @@ SCENE_SETTINGS = 'scene settings'
 
 # Physics Objects
 DEFAULT_OBJECT_WIDTH = 25
-GRAVITY = 1
+GRAVITY = 1000
 
 # Button Constants
 DEFAULT_BUTTON_WIDTH = 100

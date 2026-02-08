@@ -31,13 +31,16 @@ class ScenePlay(pyghelpers.Scene):
 
         self.oPhysicsObject = PhysicsObject(self.window)
 
+        self.oTimer = pyghelpers.CountUpTimer()
+        self.dt = 0
+
         self.playingState = STATE_PLAYING
 
     def getSceneKey(self):
         return SCENE_PLAY
 
     def enter(self, data):
-        pass
+        self.oTimer.start()
 
     def reset(self):
         pass
@@ -59,8 +62,9 @@ class ScenePlay(pyghelpers.Scene):
     def update(self):
         if self.playingState != STATE_PLAYING:
             return  # only update when playing
-
-        self.oPhysicsObject.update()
+        dt = self.oTimer.getTime()
+        self.oPhysicsObject.update(dt)
+        self.oTimer.start()
 
     def draw(self):
         self.window.fill(BLACK)
@@ -74,4 +78,4 @@ class ScenePlay(pyghelpers.Scene):
         self.settingsButton.draw()
 
     def leave(self):
-        pass
+        self.oTimer.stop()
