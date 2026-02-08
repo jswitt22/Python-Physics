@@ -52,12 +52,14 @@ class ScenePlay(pyghelpers.Scene):
                     # Handle key presses
                     if event.key == pygame.K_UP:
                         self.oPhysicsObject.applyImpulse(yImpulse=-5)
-                    if event.key == pygame.K_RIGHT:
-                        self.oPhysicsObject.applyImpulse(xImpulse=5)
+                    if event.key == pygame.K_DOWN:
+                        self.oPhysicsObject.applyImpulse(yImpulse=5)
                     if event.key == pygame.K_LEFT:
                         self.oPhysicsObject.applyImpulse(xImpulse=-5)
+                    if event.key == pygame.K_RIGHT:
+                        self.oPhysicsObject.applyImpulse(xImpulse=5)
 
-            if keyPressedList[pygame.K_SPACE]:
+            if keyPressedList[pygame.K_w]:
                 self.oPhysicsObject.applyForce(yForce=-1500)
             if keyPressedList[pygame.K_a]:
                 self.oPhysicsObject.applyForce(xForce=-500)
