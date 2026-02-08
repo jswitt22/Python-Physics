@@ -1,4 +1,5 @@
 import pygame
+import pygwidgets
 from Constants import *
 
 
@@ -13,6 +14,10 @@ class PhysicsObject:
             self.x, self.y, self.ax, self.ay = stateVector
         self.xPrev = self.x
         self.yPrev = self.y
+
+        self.oDebugText = pygwidgets.DisplayText(self.window,
+                                                 (0, 0),
+                                                 textColor=WHITE,)
 
         self.rect = pygame.Rect(self.x, self.y, DEFAULT_OBJECT_WIDTH, DEFAULT_OBJECT_WIDTH)
 
@@ -42,6 +47,12 @@ class PhysicsObject:
             vy = -vy * restitution
             self.yPrev = self.y - vy
 
+    def setDebugText(self):
+        positionString = f"x: {self.x:4.0f}, y: {self.y:4.0f}"
+        accelerationString = f"ax: {self.ax:4.0f}, ay: {self.ay:4.0f}"
+        strList = [positionString, accelerationString]
+        self.oDebugText.setText(strList)
+
     def update(self, dt, xImpulse=0, yImpulse=0):
         # Verlet method
         # Apply forces
@@ -60,8 +71,9 @@ class PhysicsObject:
         self.collideWithBounds()
 
         self.rect.update(self.x, self.y, DEFAULT_OBJECT_WIDTH, DEFAULT_OBJECT_WIDTH)
+        self.setDebugText()
 
     def draw(self):
         pygame.draw.rect(self.window, WHITE, self.rect)
-        print(self.x, self.y, self.ax, self.ay)
+        self.oDebugText.draw()
         pass
