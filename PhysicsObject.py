@@ -9,14 +9,13 @@ class PhysicsObject:
         self.window = window
 
         if stateVector is None:
-            self.x, self.y, self.ax, self.ay = 0, 0, 0, 0
+            self.x, self.y, self.vx, self.vy, self.ax, self.ay = 0, 0, 0, 0, 0, 0
         else:
-            self.x, self.y, self.ax, self.ay = stateVector
+            self.x, self.y, self.vx, self.vy, self.ax, self.ay = stateVector
         self.xPrev = self.x
         self.yPrev = self.y
 
         self.mass = 1.0 #placeholder for now
-        self.xImpulse, self.yImpulse = 0, 0
         self.xForce, self.yForce = 0, 0
 
         self.oDebugText = pygwidgets.DisplayText(self.window,
@@ -25,42 +24,36 @@ class PhysicsObject:
 
         self.rect = pygame.Rect(self.x, self.y, DEFAULT_OBJECT_WIDTH, DEFAULT_OBJECT_WIDTH)
 
-    def collideWithBounds(self, restitution=0):
+    def collideWithBounds(self, restitution=0.5):
         # Left
         if self.x < 0:
-            vx = self.x - self.xPrev
             self.x = 0
-            vx = -vx * restitution
-            self.xPrev = self.x - vx
+            self.vx = -self.vx * restitution
         # Right
         if self.x + self.rect.width > WINDOW_WIDTH:
-            vx = self.x - self.xPrev
             self.x = WINDOW_WIDTH - self.rect.width
-            vx = -vx * restitution
-            self.xPrev = self.x - vx
+            self.vx = -self.vx * restitution
         # Top
         if self.y < 0:
-            vy = self.y - self.yPrev
             self.y = 0
-            vy = -vy * restitution
-            self.yPrev = self.y - vy
+            self.vy = -self.vy * restitution
         # Bottom
         if self.y + self.rect.height > GAME_HEIGHT:
-            vy = self.y - self.yPrev
             self.y = GAME_HEIGHT - self.rect.height
-            vy = -vy * restitution
-            self.yPrev = self.y - vy
+            self.vy = -self.vy * restitution
 
     def setDebugText(self):
         positionString = f"x: {self.x:4.0f}, y: {self.y:4.0f}"
+        velocityString = f"vx: {self.vx:4.0f}, vy: {self.vy:4.0f}"
         accelerationString = f"ax: {self.ax:4.0f}, ay: {self.ay:4.0f}"
-        strList = [positionString, accelerationString]
+        strList = [positionString, velocityString, accelerationString]
         self.oDebugText.setText(strList)
 
     def applyImpulse(self, xImpulse=0, yImpulse=0):
         if xImpulse == 0 and yImpulse == 0:
             return
-        self.xImpulse, self.yImpulse = xImpulse, yImpulse
+        self.vx += xImpulse
+        self.vy += yImpulse
 
     def applyForce(self, xForce=0, yForce=0):
         if xForce == 0 and yForce == 0:
@@ -69,19 +62,21 @@ class PhysicsObject:
         self.yForce += yForce
 
     def update(self, dt):
-        # Verlet method
-        # Apply forces
+        # Velocity Verlet method
+        # Set initial acceleration
+        ax0, ay0 = self.ax, self.ay
+        # Calculate acceleration from forces
         self.ax = self.xForce/self.mass
         self.ay = GRAVITY + self.yForce/self.mass
-        # Apply impulses if any
-        self.xPrev -= self.xImpulse
-        self.yPrev -= self.yImpulse
-        # Verlet integration
-        xPrev, yPrev = self.x, self.y
-        self.x = 2*self.x - self.xPrev + self.ax * dt * dt
-        self.y = 2*self.y - self.yPrev + self.ay * dt * dt
-        self.xPrev, self.yPrev = xPrev, yPrev
-        self.xImpulse, self.yImpulse = 0, 0
+        # Update Position
+        self.x += self.vx * dt + 0.5 * self.ax * dt * dt
+        self.y += self.vy * dt + 0.5 * self.ay * dt * dt
+        # Recompute acceleration based on position (if this is the case)
+        ax1, ay1 = self.ax, self.ay
+        # Update Velocity
+        self.vx += 0.5 * (ax0 + ax1) * dt
+        self.vy += 0.5 * (ay0 + ay1) * dt
+
         self.xForce, self.yForce = 0, 0
 
         # Check wall collision
