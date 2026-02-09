@@ -28,7 +28,7 @@ class PhysicsObject:
 
         self.rect = pygame.Rect(self.x, self.y, self.width*self.pixelsPerMeter, self.height*self.pixelsPerMeter)
 
-    def collideWithBounds(self, restitution=0.5):
+    def collideWithBounds(self, restitution=0):
         # Left
         if self.x < 0:
             self.x = 0
