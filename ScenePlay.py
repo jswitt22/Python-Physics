@@ -33,7 +33,7 @@ class ScenePlay(pyghelpers.Scene):
                                             environmentWidth=WINDOW_WIDTH,
                                             environmentHeight=GAME_HEIGHT,
                                             width=DEFAULT_OBJECT_WIDTH,
-                                            height=DEFAULT_OBJECT_WIDTH,
+                                            height=DEFAULT_OBJECT_HEIGHT,
                                             pixelsPerMeter=PIXELS_PER_METER,
                                             gravity=GRAVITY)
 
