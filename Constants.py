@@ -10,8 +10,9 @@ SCENE_PLAY = 'scene play'
 SCENE_SETTINGS = 'scene settings'
 
 # Physics Objects
-DEFAULT_OBJECT_WIDTH = 25
-GRAVITY = 1000
+DEFAULT_OBJECT_WIDTH = 1
+GRAVITY = 9.81
+PIXELS_PER_METER = 25
 
 # Button Constants
 DEFAULT_BUTTON_WIDTH = 100

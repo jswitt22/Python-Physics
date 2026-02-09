@@ -29,7 +29,13 @@ class ScenePlay(pyghelpers.Scene):
                                                       'settings',
                                                     width=DEFAULT_BUTTON_WIDTH)
 
-        self.oPhysicsObject = PhysicsObject(self.window)
+        self.oPhysicsObject = PhysicsObject(self.window,
+                                            environmentWidth=WINDOW_WIDTH,
+                                            environmentHeight=GAME_HEIGHT,
+                                            width=DEFAULT_OBJECT_WIDTH,
+                                            height=DEFAULT_OBJECT_WIDTH,
+                                            pixelsPerMeter=PIXELS_PER_METER,
+                                            gravity=GRAVITY)
 
         self.oTimer = pyghelpers.CountUpTimer()
         self.dt = 0
@@ -51,20 +57,20 @@ class ScenePlay(pyghelpers.Scene):
                 if event.type == pygame.KEYDOWN:
                     # Handle key presses
                     if event.key == pygame.K_UP:
-                        self.oPhysicsObject.applyImpulse(yImpulse=-500)
+                        self.oPhysicsObject.applyImpulse(yImpulse=-10)
                     if event.key == pygame.K_DOWN:
-                        self.oPhysicsObject.applyImpulse(yImpulse=500)
+                        self.oPhysicsObject.applyImpulse(yImpulse=10)
                     if event.key == pygame.K_LEFT:
-                        self.oPhysicsObject.applyImpulse(xImpulse=-500)
+                        self.oPhysicsObject.applyImpulse(xImpulse=-10)
                     if event.key == pygame.K_RIGHT:
-                        self.oPhysicsObject.applyImpulse(xImpulse=500)
+                        self.oPhysicsObject.applyImpulse(xImpulse=10)
 
             if keyPressedList[pygame.K_w]:
-                self.oPhysicsObject.applyForce(yForce=-1500)
+                self.oPhysicsObject.applyForce(yForce=-15)
             if keyPressedList[pygame.K_a]:
-                self.oPhysicsObject.applyForce(xForce=-500)
+                self.oPhysicsObject.applyForce(xForce=-15)
             if keyPressedList[pygame.K_d]:
-                self.oPhysicsObject.applyForce(xForce=500)
+                self.oPhysicsObject.applyForce(xForce=15)
 
         for event in eventsList:
             if self.settingsButton.handleEvent(event):
