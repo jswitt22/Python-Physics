@@ -5,28 +5,36 @@ class PhysicsObject:
 
     def __init__(self, window, stateVector=None, gravity=9.81, mass=1.0, width=1.0, height=1.0, pixelsPerMeter=25, environmentWidth=1000, environmentHeight=1000, displayColor=(255,255,255), debugColor=(255,255,255)):
         self.window = window
+
+        #physics and size
         self.gravity = gravity
         self.mass = mass
         self.width, self.height = width, height
-        self.pixelsPerMeter = pixelsPerMeter
-        self.environmentWidth = environmentWidth/pixelsPerMeter
-        self.environmentHeight = environmentHeight/pixelsPerMeter
-        self.color = displayColor
-
         if stateVector is None:
             self.x, self.y, self.vx, self.vy, self.ax, self.ay = 0, 0, 0, 0, 0, 0
         else:
             self.x, self.y, self.vx, self.vy, self.ax, self.ay = stateVector
-        self.xPrev = self.x
-        self.yPrev = self.y
-
         self.xForce, self.yForce = 0, 0
+
+        #conversions
+        self.pixelsPerMeter = pixelsPerMeter
+        self.environmentWidth = environmentWidth / pixelsPerMeter
+        self.environmentHeight = environmentHeight / pixelsPerMeter
+        self.displayWidth, self.displayHeight = width * pixelsPerMeter, height * pixelsPerMeter
+        self.displayX, self.displayY = self.x * pixelsPerMeter, self.y * pixelsPerMeter
+
+        self.color = displayColor
+
+
 
         self.oDebugText = pygwidgets.DisplayText(self.window,
                                                  (0, 0),
                                                  textColor=debugColor)
 
-        self.rect = pygame.Rect(self.x, self.y, self.width*self.pixelsPerMeter, self.height*self.pixelsPerMeter)
+        self.rect = pygame.Rect(self.displayX, self.displayY, self.displayWidth, self.displayHeight)
+
+    def displayConversions(self):
+        self.displayX, self.displayY = self.x * self.pixelsPerMeter, self.y * self.pixelsPerMeter
 
     def collideWithBounds(self, restitution=0):
         # Left
@@ -86,7 +94,9 @@ class PhysicsObject:
         # Check wall collision
         self.collideWithBounds()
 
-        self.rect.update(self.x*self.pixelsPerMeter, self.y*self.pixelsPerMeter, self.width*self.pixelsPerMeter, self.height*self.pixelsPerMeter)
+        #update the display state
+        self.displayConversions()
+        self.rect.update(self.displayX, self.displayY, self.displayWidth, self.displayHeight)
         self.setDebugText()
 
     def draw(self):
