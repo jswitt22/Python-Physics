@@ -25,8 +25,6 @@ class PhysicsObject:
 
         self.color = displayColor
 
-
-
         self.oDebugText = pygwidgets.DisplayText(self.window,
                                                  (0, 0),
                                                  textColor=debugColor)
